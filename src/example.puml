@@ -1,0 +1,36 @@
+@startuml
+
+!define AWSPuml https://raw.githubusercontent.com/awslabs/aws-icons-for-plantuml/v16.0/dist
+
+!include AWSPuml/AWSCommon.puml
+!include AWSPuml/Compute/Compute.puml
+!include AWSPuml/Serverless/Serverless.puml
+
+package "Conference Room Reservations" {
+  [API Gateway] as apiGateway
+  [AWS Lambda] as commandHandler
+  [AWS Lambda] as queryHandler
+  [Amazon DynamoDB] as eventStore
+  [Amazon S3] as snapshotStore
+  [Amazon CloudWatch] as cloudWatch
+  [Amazon SNS] as sns
+  [Amazon SQS] as sqs
+  [Amazon S3] as logsBucket
+
+  apiGateway -- commandHandler
+  apiGateway -- queryHandler
+  commandHandler --> eventStore
+  queryHandler --> eventStore
+  commandHandler --> snapshotStore
+  queryHandler --> snapshotStore
+  commandHandler --> cloudWatch
+  queryHandler --> cloudWatch
+  commandHandler --> sns
+  queryHandler --> sns
+  commandHandler --> sqs
+  queryHandler --> sqs
+  commandHandler --> logsBucket
+  queryHandler --> logsBucket
+}
+
+@enduml
